@@ -1,10 +1,7 @@
 ﻿using Intprog_FinalPrjoect.Data;
 using Intprog_FinalPrjoect.Models.ViewModels;
 using Intprog_FinalPrjoect.Models;
-
 using Microsoft.AspNetCore.Mvc;
-
-
 
 namespace Intprog_FinalPrjoect.Controllers
 {
@@ -16,22 +13,41 @@ namespace Intprog_FinalPrjoect.Controllers
         {
             _context = context;
         }
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult Register(User user)
+        public IActionResult Register(RegisterViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // Check duplicate email
+            if (_context.Users.Any(u => u.Email == vm.Email))
             {
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                TempData["Success"] = "User Registered Successfully!";
-                return RedirectToAction("Login");
+                ModelState.AddModelError("Email", "An account with this email already exists.");
+                return View(vm);
             }
-            TempData["Error"] = "Registration Failed!";
-            return RedirectToAction("Register");
+
+            var user = new User
+            {
+                FirstName = vm.FirstName,
+                MiddleName = vm.MiddleName,
+                LastName = vm.LastName,
+                Email = vm.Email,
+                PhoneNumber = vm.PhoneNumber,
+                Password = vm.Password,
+                Balance = 0
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            TempData["Success"] = "Account created! Please log in.";
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
@@ -41,26 +57,27 @@ namespace Intprog_FinalPrjoect.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password) 
+        public IActionResult Login(LoginViewModel vm)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == vm.Email && u.Password == vm.Password);
             if (user != null)
             {
                 HttpContext.Session.SetInt32("UserId", user.Id);
-                TempData["Success"] = "Login Success!";
-                return RedirectToAction("Dashboard", "Wallet");
+                TempData["Success"] = $"Welcome back, {user.FirstName}!";
+                return RedirectToAction("Dashboard", "Home");
             }
-            ModelState.AddModelError("", "Invalid email or password");
-            TempData["Error"] = "Invalid email or password";
-            return View();
 
+            ModelState.AddModelError("", "Invalid email or password.");
+            return View(vm);
         }
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("UserId");
             HttpContext.Session.Clear();
-            TempData["Success"] = "Logout Successful!";
+            TempData["Success"] = "You have been logged out.";
             return RedirectToAction("Login");
         }
     }

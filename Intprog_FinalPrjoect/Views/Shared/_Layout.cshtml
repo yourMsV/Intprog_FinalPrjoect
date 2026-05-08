@@ -3,45 +3,111 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Intprog_FinalPrjoect</title>
+    <title>@ViewData["Title"] — Rentang Ina</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Intprog_FinalPrjoect.styles.css" asp-append-version="true" />
+    <style>
+        :root {
+            --rust: #c0533a;
+            --dark: #1a1410;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--rust) !important;
+            font-size: 1.3rem;
+            letter-spacing: -.01em;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: .88rem;
+            text-decoration: none;
+            transition: background .2s, color .2s;
+        }
+
+        .nav-btn-outline {
+            border: 2px solid var(--rust);
+            color: var(--rust);
+        }
+
+            .nav-btn-outline:hover {
+                background: var(--rust);
+                color: #fff;
+            }
+
+        .nav-btn-fill {
+            background: var(--rust);
+            color: #fff;
+            border: 2px solid var(--rust);
+        }
+
+            .nav-btn-fill:hover {
+                background: #a03e28;
+                border-color: #a03e28;
+                color: #fff;
+            }
+
+        .main-nav {
+            box-shadow: 0 1px 12px rgba(0,0,0,.07);
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Rentang Ina</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white main-nav">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">🏠 Rentang Ina</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <div class="collapse navbar-collapse" id="navMain">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                     </ul>
+                    <div class="d-flex gap-2 align-items-center">
+                        @if (Context.Session.GetInt32("UserId") != null)
+                        {
+                            <a class="nav-btn nav-btn-outline" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                            <a class="nav-btn nav-btn-fill" asp-controller="Account" asp-action="Logout">Logout</a>
+                        }
+                        else
+                        {
+                            <a class="nav-btn nav-btn-outline" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class="nav-btn nav-btn-fill" asp-controller="Account" asp-action="Register">Register</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Intprog_FinalPrjoect - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible text-center mb-0 rounded-0 py-2" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible text-center mb-0 rounded-0 py-2" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <main>@RenderBody()</main>
+
+    <footer style="background:#1a1410;color:#7a6a5e;text-align:center;padding:28px;font-size:.85rem;margin-top:0">
+        © 2026 Rentang Ina · All rights reserved
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

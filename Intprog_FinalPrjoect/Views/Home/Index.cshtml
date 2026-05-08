@@ -1,8 +1,374 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <style>
+        :root {
+          --clay: #e8ddd0;
+          --rust: #c0533a;
+          --rust-light: #d9684e;
+          --dark: #1a1410;
+          --warm: #3d2b1f;
+          --muted: #7a6a5e;
+          --sand: #f4ede4;
+          --white: #fdfaf7;
+        }
+
+        body { background: var(--white); }
+
+        /* ── HERO ── */
+        .hero {
+          position: relative;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          overflow: hidden;
+          background: var(--dark);
+          padding: 0 5vw;
+        }
+
+        .hero-noise {
+          position: absolute; inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+          pointer-events: none; z-index: 1;
+        }
+
+        .hero-blob {
+          position: absolute; border-radius: 50%;
+          background: radial-gradient(circle, var(--rust) 0%, transparent 70%);
+          filter: blur(80px); opacity: .35; pointer-events: none; z-index: 0;
+        }
+        .blob-1 { width: 600px; height: 600px; top: -150px; right: -100px; }
+        .blob-2 { width: 400px; height: 400px; bottom: -100px; left: 5%; opacity: .2; }
+
+        .hero-inner {
+          position: relative; z-index: 2;
+          max-width: 780px;
+        }
+
+        .hero-eyebrow {
+          display: inline-flex; align-items: center; gap: 10px;
+          background: rgba(192,83,58,.18);
+          border: 1px solid rgba(192,83,58,.4);
+          color: var(--rust-light); border-radius: 100px;
+          padding: 6px 18px; font-size: .78rem; letter-spacing: .12em;
+          text-transform: uppercase; font-weight: 600; margin-bottom: 32px;
+        }
+        .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--rust-light); animation: pulse 2s infinite; }
+        @@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+
+        .hero-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(3rem, 7vw, 5.5rem);
+          font-weight: 800; color: var(--white);
+          line-height: 1.05; margin-bottom: 28px;
+          letter-spacing: -.02em;
+        }
+        .hero-title .accent { color: var(--rust-light); font-style: italic; }
+
+        .hero-sub {
+          font-size: 1.15rem; color: #b0a090;
+          max-width: 520px; line-height: 1.7;
+          margin-bottom: 48px;
+        }
+
+        .hero-cta-row {
+          display: flex; gap: 16px; flex-wrap: wrap;
+          align-items: center;
+        }
+
+        .btn-primary-cta {
+          background: var(--rust); color: #fff;
+          border: none; border-radius: 8px;
+          padding: 16px 36px; font-size: 1rem;
+          font-weight: 700; letter-spacing: .02em;
+          text-decoration: none; transition: background .2s, transform .15s;
+          cursor: pointer; display: inline-block;
+        }
+        .btn-primary-cta:hover { background: var(--rust-light); transform: translateY(-2px); color:#fff; }
+
+        .btn-outline-cta {
+          border: 2px solid rgba(255,255,255,.2); color: var(--white);
+          border-radius: 8px; padding: 14px 34px; font-size: 1rem;
+          font-weight: 600; text-decoration: none;
+          transition: border-color .2s, background .2s;
+          display: inline-block;
+        }
+        .btn-outline-cta:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.06); color:#fff; }
+
+        .hero-stats {
+          position: relative; z-index: 2;
+          display: flex; gap: 48px; flex-wrap: wrap;
+          margin-top: 72px; padding-top: 40px;
+          border-top: 1px solid rgba(255,255,255,.08);
+        }
+        .stat-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--white); }
+        .stat-lbl { font-size: .82rem; color: #8a7a6e; letter-spacing: .05em; text-transform: uppercase; margin-top: 2px; }
+
+        /* ── HOW IT WORKS ── */
+        .section { padding: 100px 5vw; }
+        .section-tag {
+          display: inline-block; background: var(--rust); color: #fff;
+          font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+          font-weight: 700; padding: 5px 14px; border-radius: 4px; margin-bottom: 20px;
+        }
+        .section-title {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: 800; color: var(--dark); line-height: 1.15; margin-bottom: 16px;
+        }
+        .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 480px; line-height: 1.65; }
+
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 32px; margin-top: 60px; }
+        .step-card {
+          background: var(--sand); border-radius: 16px; padding: 36px 28px;
+          border: 1px solid #e0d4c5; position: relative; overflow: hidden;
+          transition: transform .2s, box-shadow .2s;
+        }
+        .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(192,83,58,.12); }
+        .step-num {
+          font-family: 'Playfair Display', serif; font-size: 4rem;
+          font-weight: 900; color: rgba(192,83,58,.12);
+          position: absolute; top: 8px; right: 20px; line-height: 1;
+        }
+        .step-icon { font-size: 2rem; margin-bottom: 18px; }
+        .step-card h4 { font-weight: 700; font-size: 1.05rem; color: var(--dark); margin-bottom: 10px; }
+        .step-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; margin:0; }
+
+        /* ── LISTINGS PREVIEW ── */
+        .listings-section { background: var(--sand); }
+        .listing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 28px; margin-top: 52px; }
+        .listing-card {
+          background: var(--white); border-radius: 16px; overflow: hidden;
+          border: 1px solid #e0d4c5; transition: transform .2s, box-shadow .2s;
+        }
+        .listing-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,.1); }
+        .listing-img {
+          height: 180px; display: flex; align-items: center; justify-content: center;
+          font-size: 4rem;
+        }
+        .listing-img.c1 { background: linear-gradient(135deg, #f0e0d0, #e0c8b0); }
+        .listing-img.c2 { background: linear-gradient(135deg, #d0e0f0, #b8cfe0); }
+        .listing-img.c3 { background: linear-gradient(135deg, #d0f0d8, #b0e0bc); }
+        .listing-body { padding: 22px 22px 24px; }
+        .listing-badge {
+          display: inline-block; background: rgba(192,83,58,.12); color: var(--rust);
+          font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+          border-radius: 4px; padding: 3px 10px; margin-bottom: 10px;
+        }
+        .listing-title { font-weight: 700; font-size: 1.05rem; color: var(--dark); margin-bottom: 6px; }
+        .listing-loc { color: var(--muted); font-size: .85rem; margin-bottom: 14px; }
+        .listing-price { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: var(--rust); }
+        .listing-price span { font-family: inherit; font-size: .85rem; color: var(--muted); font-weight: 400; }
+
+        /* ── TESTIMONIAL ── */
+        .testimonial-section { background: var(--dark); padding: 100px 5vw; }
+        .testimonial-section .section-title { color: var(--white); }
+        .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 24px; margin-top: 52px; }
+        .testi-card {
+          background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+          border-radius: 16px; padding: 32px;
+        }
+        .testi-stars { color: #f5a623; font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+        .testi-text { color: #c8b8a8; font-size: .95rem; line-height: 1.7; margin-bottom: 22px; font-style: italic; }
+        .testi-author { display: flex; align-items: center; gap: 12px; }
+        .testi-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .av1 { background: linear-gradient(135deg,#e88,#c44); }
+        .av2 { background: linear-gradient(135deg,#88c,#44a); }
+        .av3 { background: linear-gradient(135deg,#8c8,#4a4); }
+        .testi-name { font-weight: 700; color: var(--white); font-size: .9rem; }
+        .testi-role { font-size: .78rem; color: #7a6a5e; }
+
+        /* ── CTA BANNER ── */
+        .cta-banner {
+          background: var(--rust); padding: 90px 5vw;
+          text-align: center;
+        }
+        .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3rem); color: #fff; font-weight: 800; margin-bottom: 16px; }
+        .cta-banner p { color: rgba(255,255,255,.8); font-size: 1.1rem; margin-bottom: 40px; }
+        .btn-white { background: #fff; color: var(--rust); border: none; border-radius: 8px; padding: 16px 40px; font-weight: 800; font-size: 1rem; text-decoration: none; display: inline-block; transition: transform .15s; }
+        .btn-white:hover { transform: translateY(-2px); color: var(--rust); }
+
+        /* scroll fade-in */
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-noise"></div>
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+
+    <div class="hero-inner">
+        <div class="hero-eyebrow"><span></span> Property Rentals in the Philippines</div>
+        <h1 class="hero-title">
+            Find Your Next<br><em class="accent">Home to Rent</em>
+        </h1>
+        <p class="hero-sub">
+            Browse verified rental listings across the country — from studio apartments
+            in the city to family homes in the suburbs. Real spaces. Real prices in ₱.
+        </p>
+        <div class="hero-cta-row">
+            <a href="/Account/Login" class="btn-primary-cta">Login to Browse</a>
+            <a href="/Account/Register" class="btn-outline-cta">Create Free Account</a>
+        </div>
+    </div>
+
+    <div class="hero-stats">
+        <div>
+            <div class="stat-val">2,400+</div>
+            <div class="stat-lbl">Active Listings</div>
+        </div>
+        <div>
+            <div class="stat-val">98%</div>
+            <div class="stat-lbl">Verified Landlords</div>
+        </div>
+        <div>
+            <div class="stat-val">₱8K</div>
+            <div class="stat-lbl">Starting Monthly</div>
+        </div>
+        <div>
+            <div class="stat-val">12+</div>
+            <div class="stat-lbl">Cities Covered</div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section fade-up">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Renting Made <em>Ridiculously</em> Easy</h2>
+    <p class="section-sub">No middlemen. No hidden fees. Just you and your next home.</p>
+
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-num">01</div>
+            <div class="step-icon">👤</div>
+            <h4>Create an Account</h4>
+            <p>Register in under two minutes. We only need the essentials to get you started.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">02</div>
+            <div class="step-icon">🔍</div>
+            <h4>Browse Listings</h4>
+            <p>Filter by location, price in ₱, and property type to find your perfect match.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">03</div>
+            <div class="step-icon">💬</div>
+            <h4>Contact Landlord</h4>
+            <p>Reach out directly through the platform. No call centers, no runaround.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">04</div>
+            <div class="step-icon">🏠</div>
+            <h4>Move In!</h4>
+            <p>Sign your lease and settle in. Your new home is just a few clicks away.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED LISTINGS PREVIEW -->
+<section class="section listings-section fade-up">
+    <div class="section-tag">Featured Listings</div>
+    <h2 class="section-title">Spaces People <em>Love</em></h2>
+    <p class="section-sub">A taste of what's waiting for you once you log in.</p>
+
+    <div class="listing-grid">
+        <div class="listing-card">
+            <div class="listing-img c1">🏢</div>
+            <div class="listing-body">
+                <span class="listing-badge">Studio</span>
+                <div class="listing-title">Modern Studio in Cebu IT Park</div>
+                <div class="listing-loc">📍 Cebu City, Cebu</div>
+                <div class="listing-price">₱12,000 <span>/ month</span></div>
+            </div>
+        </div>
+        <div class="listing-card">
+            <div class="listing-img c2">🏘</div>
+            <div class="listing-body">
+                <span class="listing-badge">House &amp; Lot</span>
+                <div class="listing-title">3BR Family Home with Garden</div>
+                <div class="listing-loc">📍 Mandaue City, Cebu</div>
+                <div class="listing-price">₱28,500 <span>/ month</span></div>
+            </div>
+        </div>
+        <div class="listing-card">
+            <div class="listing-img c3">🏨</div>
+            <div class="listing-body">
+                <span class="listing-badge">1BR Condo</span>
+                <div class="listing-title">1BR with Balcony near Ayala</div>
+                <div class="listing-loc">📍 Makati City, Metro Manila</div>
+                <div class="listing-price">₱22,000 <span>/ month</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center;margin-top:48px;">
+        <a href="/Account/Login" class="btn-primary-cta">See All Listings →</a>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonial-section fade-up">
+    <div class="section-tag" style="background:rgba(192,83,58,.5)">What Renters Say</div>
+    <h2 class="section-title">Real Stories, <em style="color:var(--rust-light)">Real Homes</em></h2>
+
+    <div class="testi-grid">
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Found my studio in Cebu IT Park within a week. No hassle, transparent pricing — exactly what it says on the tin."</p>
+            <div class="testi-author">
+                <div class="testi-avatar av1">😊</div>
+                <div>
+                    <div class="testi-name">Maria Santos</div>
+                    <div class="testi-role">Renter · Cebu City</div>
+                </div>
+            </div>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"As a landlord, listing here got me tenants in days. The platform is clean and the renters are serious."</p>
+            <div class="testi-author">
+                <div class="testi-avatar av2">🧑</div>
+                <div>
+                    <div class="testi-name">Jun Reyes</div>
+                    <div class="testi-role">Landlord · Mandaue City</div>
+                </div>
+            </div>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★☆</div>
+            <p class="testi-text">"Relocated from Manila to Cebu for work. Rentang Ina had the most listings in one place — saved me hours."</p>
+            <div class="testi-author">
+                <div class="testi-avatar av3">👩</div>
+                <div>
+                    <div class="testi-name">Cha dela Cruz</div>
+                    <div class="testi-role">Renter · Lapu-Lapu City</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner fade-up">
+    <h2>Ready to Find Your Home?</h2>
+    <p>Join thousands of Filipinos who found their perfect rental through Rentang Ina.</p>
+    <a href="/Account/Register" class="btn-white">Get Started — It's Free</a>
+</section>
+
+@section Scripts {
+    <script>
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+}
