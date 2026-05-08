@@ -3,28 +3,29 @@
 
 @{
     ViewData["Title"] = "Register";
+    Layout = null;
 }
 
     <div class="register-page">
         <div class="register-card">
-            <h2 class="register-title">Join (WEBSITE NAME) Now!</h2>
+            <h2 class="register-title">Join Rentang Ina Now!</h2>
 
             <form method="post">
 
                 <!--FirstName, MiddleName, LastName-->
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <label asp-for="FirstName" class="form-label">First Name</label>
+                    <label asp-for="FirstName" class="form-label">Given Name ni Mamwa</label>
                         <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
                         <span asp-validation-for="FirstName" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label asp-for="MiddleName" class="form-label">MiddleName</label>
+                    <label asp-for="MiddleName" class="form-label">Middle Name Here, Teh</label>
                         <input asp-for="MiddleName" class="form-control" placeholder="Enter your middle name" />
                         <span asp-validation-for="MiddleName" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label asp-for="LastName" class="form-label">LastName</label>
+                    <label asp-for="LastName" class="form-label">Family Name ng Fierce</label>
                         <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
                         <span asp-validation-for="LastName" class="text-danger small"></span>
                     </div>
@@ -33,12 +34,12 @@
                 <!--Email, Phone-->
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label asp-for="Email" class="form-label">Email</label>
+                        <label asp-for="Email" class="form-label">Email-ya</label>
                         <input asp-for="Email" class="form-control" placeholder="Enter your email" />
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="PhoneNumber" class="form-label">Phone</label>
+                    <label asp-for="PhoneNumber" class="form-label">Ring Ring Mo, Teh</label>
                         <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
@@ -47,12 +48,12 @@
                 <!--Password, ConfirmPassword-->
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label asp-for="Password" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">Pakword</label>
                         <input asp-for="Password" class="form-control" placeholder="Enter your password" />
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <label asp-for="ConfirmPassword" class="form-label">Conpirm Pakword</label>
                         <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>

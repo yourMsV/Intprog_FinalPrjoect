@@ -2,42 +2,48 @@
 @model LoginViewModel
 @{
     ViewData["Title"] = "Login";
+    Layout = null;
 }
 
-<h1>Login</h1>
+
 
 <div class="form-panel">
         <div class="login-card">
-            <h2 class="login-title">Welcome Back!</h2>
 
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <!--Right panel-->
+            <div class="=login-form-panel">
+            <h2 class="login-title">Welcome, Accla! Pasok ka na sa Rentang Ina world.</h2>
+            <p class="login-subtitle">Prove your identity, shantay-style.</p>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
 
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
-                    <span asp-validation-for="Email" class="text-danger small"></span>
-                </div>
-                <div class="mb-4">
-                    <label asp-for="Password" class="form-label">Password</label>
-                    <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email-ya</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label">Pakword</label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
                     <span asp-validation-for="Password" class="text-danger small"></span>
-                </div>
-                <span asp-validation-for="Password" class="text-danger small"></span>
 
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberMe" name="RememberMe" />
-                    <label class="form-check-label" for="rememberMe">Remember for 30 days</label>
-                </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="RememberMe" />
+                        <label class="form-check-label" for="rememberMe">Remember for 30 days</label>
+                    </div>
 
-                <button type="submit" class="btn-login">Login</button>
-            </form>
+                    <button type="submit" class="btn-login">Login</button>
+                </form>
 
         
-            <p class="register-text">
-                Don't have an account? <a asp-controller="Account" asp-action="Register">Register here</a>.
-            </p>
+                <p class="register-text">
+                    Don't have an account? <a asp-controller="Account" asp-action="Register">Register here</a>.
+                </p>
+            </div>
         </div>
 
 </div>
